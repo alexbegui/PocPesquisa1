@@ -45,6 +45,13 @@ namespace Gestao.Data.Repositories
         {
             using (var _db = _factory.CreateDbContext())
             {
+                // Converte o DateTimeOffset para UTC antes de salvar
+                entity.CreatedAt = entity.CreatedAt.ToUniversalTime();
+                if (entity.DeletedAt.HasValue)
+                {
+                    entity.DeletedAt = entity.DeletedAt.Value.ToUniversalTime();
+                }
+
                 _db.Companies.Add(entity);
                 await _db.SaveChangesAsync();
             }

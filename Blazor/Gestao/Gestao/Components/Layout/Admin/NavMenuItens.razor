@@ -23,41 +23,47 @@
                         Empresa
                     </NavLink>
                 </li>
+
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/Account/List">
+                        Conta
+                    </NavLink>
+                </li>
+
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/Category/List">
+                        Categoria
+                    </NavLink>
+                </li>
+
                 @if (hasCompanySelected)
                 {
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="/Account/List">
-                            Conta
-                        </NavLink>
-                    </li>
-
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="/Category/List">
-                            Categoria
-                        </NavLink>
-                    </li>
+                   
                 }
 
             </ul>
         </div>
     </li>
+
+    <li class="nav-item">
+        <a class="nav-link menu-link" href="#sidebarAccount" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+            <i class="ri-money-dollar-circle-line"></i> <span data-key="t-account"> Contas</span>
+        </a>
+        <div class="collapse menu-dropdown" id="sidebarAccount">
+            <ul class="nav nav-sm flex-column">
+                <li class="nav-item">
+                    <NavLink href="/Financial/Pay/List" class="nav-link" data-key="t-pay">Pagar</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink href="/Financial/Receive/List" class="nav-link" data-key="t-receive">Receber</NavLink>
+                </li>
+            </ul>
+        </div>
+    </li>
+
     @if (hasCompanySelected)
     {
-        <li class="nav-item">
-            <a class="nav-link menu-link" href="#sidebarAccount" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
-                <i class="ri-money-dollar-circle-line"></i> <span data-key="t-account"> Contas</span>
-            </a>
-            <div class="collapse menu-dropdown" id="sidebarAccount">
-                <ul class="nav nav-sm flex-column">
-                    <li class="nav-item">
-                        <NavLink href="/Financial/Pay/List" class="nav-link" data-key="t-pay">Pagar</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink href="/Financial/Receive/List" class="nav-link" data-key="t-receive">Receber</NavLink>
-                    </li>
-                </ul>
-            </div>
-        </li>
+       
     }
 </ul>
 

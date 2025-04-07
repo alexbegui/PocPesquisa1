@@ -37,28 +37,28 @@ builder.Services.AddAuthentication(options =>
         options.DefaultScheme = IdentityConstants.ApplicationScheme;
         options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
     })
-    .AddGoogle(options =>
-    {
-        options.ClientId = builder.Configuration.GetValue<String>("OAuth:Google:ClientId")!;
-        options.ClientSecret = builder.Configuration.GetValue<String>("OAuth:Google:ClientSecret")!;
-    })
-    .AddFacebook(options =>
-    {
-        options.ClientId = builder.Configuration.GetValue<String>("OAuth:Facebook:ClientId")!;
-        options.ClientSecret = builder.Configuration.GetValue<String>("OAuth:Facebook:ClientSecret")!;
-    })
-    .AddMicrosoftAccount(options =>
-    {
-        options.ClientId = builder.Configuration.GetValue<String>("OAuth:Microsoft:ClientId")!;
-        options.ClientSecret = builder.Configuration.GetValue<String>("OAuth:Microsoft:ClientSecret")!;
-    })
+    //.AddGoogle(options =>
+    //{
+    //    options.ClientId = builder.Configuration.GetValue<String>("OAuth:Google:ClientId")!;
+    //    options.ClientSecret = builder.Configuration.GetValue<String>("OAuth:Google:ClientSecret")!;
+    //})
+    //.AddFacebook(options =>
+    //{
+    //    options.ClientId = builder.Configuration.GetValue<String>("OAuth:Facebook:ClientId")!;
+    //    options.ClientSecret = builder.Configuration.GetValue<String>("OAuth:Facebook:ClientSecret")!;
+    //})
+    //.AddMicrosoftAccount(options =>
+    //{
+    //    options.ClientId = builder.Configuration.GetValue<String>("OAuth:Microsoft:ClientId")!;
+    //    options.ClientSecret = builder.Configuration.GetValue<String>("OAuth:Microsoft:ClientSecret")!;
+    //})
     .AddIdentityCookies();
 #endregion
 
 #region Config of Database & Authentication
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -142,32 +142,35 @@ app.MapGet("/api/categories", async (
 
 app.MapGet("/api/companies", async (
     ICompanyRepository repository,
-    [FromQuery]Guid applicationUserId,
+    [FromQuery] Guid applicationUserId,
     [FromQuery] int pageIndex,
     [FromQuery] string searchWord
-) => {
+) =>
+{
 
     var data = await repository.GetAll(applicationUserId, pageIndex, pageSize, searchWord);
     return Results.Ok(data);
 });
 
-app.MapGet("/api/accounts", async(
+app.MapGet("/api/accounts", async (
     IAccountRepository repository,
     [FromQuery] int companyId,
     [FromQuery] int pageIndex,
     [FromQuery] string searchWord
-) =>{
+) =>
+{
     var data = await repository.GetAll(companyId, pageIndex, pageSize, searchWord);
     return Results.Ok(data);
 });
 
-app.MapGet("/api/financialtransactions", async(
+app.MapGet("/api/financialtransactions", async (
     IFinancialTransactionRepository repository,
     [FromQuery] TypeFinancialTransaction type,
     [FromQuery] int companyId,
     [FromQuery] int pageIndex,
     [FromQuery] string searchWord
-) =>{
+) =>
+{
     var data = await repository.GetAll(companyId, type, pageIndex, pageSize, searchWord);
     return Results.Ok(data);
 });

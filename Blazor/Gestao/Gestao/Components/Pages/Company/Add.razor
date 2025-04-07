@@ -124,8 +124,26 @@
         Company.CreatedAt = DateTimeOffset.Now;
         Company.UserId = (await AuthenticationHelper.GetAuthenticationUserIdAsync(AuthenticationStateProvider)).Value;
        
-        await CompanyRepository.Add(Company);
         
+        // Use InvokeVoidAsync with proper error handling
+        try
+        {
+            await CompanyRepository.Add(Company);
+            //await JS.InvokeVoidAsync("alert", "Registro salvo com sucesso!");
+            NavigationManager.NavigateTo("/Company/List");
+        }
+        catch (JSException jsEx)
+        {
+            Console.Error.WriteLine($"JavaScript error: {jsEx.Message}");
+            NavigationManager.NavigateTo("/Company/List");
+        }
+
+        catch (Exception js)
+        {
+            Console.Error.WriteLine($"JavaScript error: {js.Message}");
+            NavigationManager.NavigateTo("/Company/List");
+        }
+
         await JS.InvokeVoidAsync("alert", "Registro salvo com sucesso!");
         NavigationManager.NavigateTo("/Company/List");
     }
