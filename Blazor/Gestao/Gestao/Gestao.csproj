@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gestao.Domain\Gestao.Domain.csproj" />
+    <ProjectReference Include="..\..\Inventory.DataBase\CensusFieldSurvey.DataBase.csproj" />
     <ProjectReference Include="..\Gestao.Client\Gestao.Client.csproj" />
     <PackageReference Include="Azure.Identity" Version="1.13.1" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />

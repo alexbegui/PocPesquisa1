@@ -30,5 +30,6 @@ builder.Services.AddScoped<IAccountRepository, AccountService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryService>();
 builder.Services.AddScoped<ICompanyRepository, CompanyService>();
 builder.Services.AddScoped<IFinancialTransactionRepository, FinancialTransactionService>();
+builder.Services.AddScoped<Gestao.Client.Repositories.IResearchRepository, Gestao.Client.Repositories.ResearchRepository>();
 
 await builder.Build().RunAsync();

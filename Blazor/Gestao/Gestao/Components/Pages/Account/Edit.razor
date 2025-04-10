@@ -1,11 +1,12 @@
 ﻿@page "/Account/Edit/{id:int}"
+
 @rendermode InteractiveServer
 
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 @inject IAccountRepository AccountRepository
 @inject ILocalStorageService LocalStorage
-@inject ApplicationDbContext DB
+@inject AppDbContext DB
 
 <PageTitle>
     Conta - Atualizar

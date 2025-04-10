@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Gestao.Data.Interceptors
+namespace CensusFieldSurvey.DataBase.Interceptors
 {
     public class SoftDeleteInterceptor : SaveChangesInterceptor
     {

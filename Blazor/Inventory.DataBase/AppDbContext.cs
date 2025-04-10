@@ -1,21 +1,47 @@
-using Gestao.Data.Interceptors;
+﻿using CensusFieldSurvey.DataBase.Interceptors;
+using CensusFieldSurvey.Model.EntitesBD;
+using Gestao.Data;
 using Gestao.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gestao.Data
+namespace CensusFieldSurvey.DataBase
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    // Change the class name to be consistent
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Research> Researchs { get; set; }
+
+        // aqui é o do projeto gfestão....
         public DbSet<Company> Companies { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<FinancialTransaction> FinancialTransactions { get; set; }
         public DbSet<Document> Documents { get; set; }
 
+        public AppDbContext()
+        {
+            Database.Migrate();
+        }
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+            // Remove Database.Migrate() from here
+            // It should be called during application startup, not in the constructor
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = "Host=localhost;Port=5432;Database=API4;Username=postgres;Password=postgres";
+
+                optionsBuilder.UseNpgsql(connectionString);
+            }
+
             optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         }
 

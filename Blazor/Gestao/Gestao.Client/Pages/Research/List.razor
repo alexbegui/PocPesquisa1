@@ -1,0 +1,87 @@
+@page "/Research/List"
+@attribute [Authorize]
+@rendermode InteractiveAuto
+@inject IResearchRepository ResearchRepository
+@inject IConfiguration Configuration
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>
+    Pesquisa - Lista
+</PageTitle>
+<div class="card">
+    <div class="card-header align-items-center d-flex">
+        <h4 class="card-title mb-0 flex-grow-1">Pesquisas</h4>
+        <div class="flex-shrink-0">
+            <a href="/Research/Add" class="btn btn-primary btn-sm material-shadow-none">
+                <i class="ri-file-list-3-line align-middle"></i> Cadastrar
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Digite sua pesquisa" @bind="SearchWord">
+                <button class="btn btn-outline-success material-shadow-none" type="button" @onclick="OnSearch">Pesquisar</button>
+            </div>
+        </div>
+        <div class="table-responsive mt-4" style="margin-left: -16px; margin-right: -16px;">
+            <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                <thead class="text-muted table-light">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Formulário</th>
+                        <th scope="col">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(Paginated == null){
+                        <tr>
+                            <td colspan="3">Carregando...</td>
+                        </tr>
+                    }
+                    else if(Paginated.Items.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="3">Nenhum registro!</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach(var item in Paginated.Items){
+                            <tr>
+                                <td>@item.IdResearch</td>
+                                <td>@item.Form</td>
+                                <td>
+                                    <a href="/Research/Edit/@item.IdResearch" class="btn btn-sm btn-soft-primary">
+                                        <i class="ri-pencil-line align-middle"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? SearchWord { get; set; }
+    private PaginatedList<ResearchResponse>? Paginated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task OnSearch()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        Paginated = await ResearchRepository.GetAll(SearchWord);
+    }
+}

@@ -2,7 +2,8 @@
 @inject ICategoryRepository CategoryRepository
 @inject IAccountRepository AccountRepository
 @inject ILocalStorageService LocalStorage
-@inject ApplicationDbContext DB
+@inject AppDbContext DB
+
 <EditForm Model="FinancialTransaction" OnValidSubmit="Submit" FormName="Register">
     <DataAnnotationsValidator />
     <div class="row">

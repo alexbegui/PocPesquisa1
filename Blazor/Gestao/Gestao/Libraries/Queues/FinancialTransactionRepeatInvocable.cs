@@ -1,4 +1,6 @@
-﻿using Coravel.Invocable;
+﻿using CensusFieldSurvey.DataBase.Repositories;
+using CensusFieldSurvey.DataBase;
+using Coravel.Invocable;
 using Gestao.Domain;
 using Gestao.Domain.Enums;
 using Gestao.Domain.Repositories;
@@ -7,9 +9,9 @@ namespace Gestao.Libraries.Queues
 {
     public class FinancialTransactionRepeatInvocable : IInvocable, IInvocableWithPayload<FinancialTransaction>
     {
-        private IFinancialTransactionRepository _repository;
+        private readonly IRepository<FinancialTransaction> _repository;
 
-        public FinancialTransactionRepeatInvocable(IFinancialTransactionRepository repository)
+        public FinancialTransactionRepeatInvocable(IRepository<FinancialTransaction> repository)
         {
             _repository = repository;
         }
@@ -19,11 +21,11 @@ namespace Gestao.Libraries.Queues
         public async Task Invoke()
         {
             int startPoint = 1;
-            int countTransactionsSameGroup = await _repository.GetCountTransactionsSameGroup(Payload.Id);
-            
+            int countTransactionsSameGroup = await (_repository as FinancialTransactionRepository).GetCountTransactionsSameGroup(Payload.Id);
+
             await AssignRepeatGroupToPayload();
 
-            if(countTransactionsSameGroup == 0)
+            if (countTransactionsSameGroup == 0)
             {
                 await RegisterNewTransactions(startPoint);
             }
@@ -50,10 +52,10 @@ namespace Gestao.Libraries.Queues
         {
             if (Payload.Repeat == Recurrence.None && countTransactionsSameGroup > 1)
             {
-                var transactions = await _repository.GetTransactionsSameGroup(Payload.Id);
+                var transactions = await (_repository as FinancialTransactionRepository).GetTransactionsSameGroup(Payload.Id);
                 for (int i = 2; i <= countTransactionsSameGroup; i++)
                 {
-                    await _repository.Delete(transactions.ElementAt(i-1));
+                    await _repository.Remove(transactions.ElementAt(i - 1).Id);
                 }
             }
         }
@@ -62,10 +64,10 @@ namespace Gestao.Libraries.Queues
         {
             if (Payload.Repeat != Recurrence.None && countTransactionsSameGroup > Payload.RepeatTimes)
             {
-                var transactions = await _repository.GetTransactionsSameGroup(Payload.Id);
+                var transactions = await (_repository as FinancialTransactionRepository).GetTransactionsSameGroup(Payload.Id);
                 for (int i = countTransactionsSameGroup; i > Payload.RepeatTimes; i--)
                 {
-                    await _repository.Delete(transactions.ElementAt(i-1));
+                    await _repository.Remove(transactions.ElementAt(i - 1).Id);
                 }
             }
         }
@@ -93,7 +95,7 @@ namespace Gestao.Libraries.Queues
                     financial.AccountId = Payload.AccountId;
                     financial.CategoryId = Payload.CategoryId;
 
-                    await _repository.Add(financial);
+                    await  _repository.Add(financial);
                 }
             }
         }

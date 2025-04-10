@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gestao.Domain\Gestao.Domain.csproj" />
+    <ProjectReference Include="..\..\Model\CensusFieldSurvey.Model.csproj" />
   </ItemGroup>
 
 </Project>
